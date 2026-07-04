@@ -1,0 +1,39 @@
+CREATE DATABASE IF NOT EXISTS laundry_db;
+USE laundry_db;
+
+-- Tabel Layanan (Diatur oleh Admin)
+CREATE TABLE layanan (
+    id_layanan INT AUTO_INCREMENT PRIMARY KEY,
+    nama_layanan VARCHAR(100) NOT NULL,
+    harga_per_satuan INT NOT NULL,
+    satuan VARCHAR(20) DEFAULT 'Kg'
+);
+
+-- Data Awal Layanan
+INSERT INTO layanan (nama_layanan, harga_per_satuan, satuan) VALUES
+('Cuci Kering', 6000, 'Kg'),
+('Cuci Setrika', 8000, 'Kg'),
+('Express 1 Hari', 12000, 'Kg');
+
+-- Tabel Transaksi (Diinput oleh Kasir)
+CREATE TABLE transaksi (
+    id_transaksi INT AUTO_INCREMENT PRIMARY KEY,
+    nama_pelanggan VARCHAR(100) NOT NULL,
+    id_layanan INT,
+    berat_qty FLOAT NOT NULL,
+    total_bayar INT NOT NULL,
+    status_pesanan ENUM('Proses', 'Selesai', 'Diambil') DEFAULT 'Proses',
+    tanggal_transaksi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_layanan) REFERENCES layanan(id_layanan) ON DELETE SET NULL
+);
+CREATE TABLE users (
+    id_user INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    role ENUM('admin', 'kasir') NOT NULL
+);
+
+-- Masukkan data akun awal (Password menggunakan MD5/Plain teks untuk contoh sederhana ini)
+INSERT INTO users (username, password, role) VALUES
+('adminlaundry', 'admin123', 'admin'),
+('kasirlaundry', 'kasir123', 'kasir');
